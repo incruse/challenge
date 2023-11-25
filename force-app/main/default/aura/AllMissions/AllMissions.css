@@ -1,0 +1,77 @@
+.THIS {
+}
+
+.THIS .lightning-icon-orange {
+    --lwc-colorTextIconDefault: #FFB224;
+}
+
+.THIS .lightning-icon-black {
+    --lwc-colorTextIconDefault: black;
+}
+
+.THIS.card {
+    background-color: white;
+    border-radius: 20px;
+    height: calc(100vh - 55px);
+}
+
+.THIS .header {
+    align-items: center;
+}
+
+.THIS .tab-header-set {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.THIS .rank {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+
+.THIS .height-100 {
+    height: 100%;
+}
+
+.THIS .mission-list {
+    overflow-y: scroll;
+    height: calc(100vh - 164px);
+}
+
+.THIS .mission-line {
+    border-radius: 5px;
+}
+
+.THIS .mission-line:hover {
+    cursor: pointer;
+    background-color: var(--slds-g-color-neutral-base-90, var(--lwc-colorGray4,rgb(236, 235, 234)))!important;
+}
+
+.THIS .mission-line[data-selected="true"] {
+    cursor: pointer;
+    background-color: var(--slds-g-color-neutral-base-80, var(--lwc-colorGray6,rgb(201, 199, 197)))!important;
+}
+
+.THIS .mission-line {
+    position: relative;
+}
+
+.THIS .mission-line::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    right: 5px;
+    bottom: 0;
+    height: 1px;
+    background-color: #ddd;
+    z-index: 1;
+}
+
+.THIS .text-2-line {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}

@@ -1,0 +1,23 @@
+.lightning-icon-orange {
+    --lwc-colorTextIconDefault: #FFB224;
+}
+
+.lightning-icon-black {
+    --lwc-colorTextIconDefault: black;
+}
+
+.card {
+    background-color: white;
+    border-radius: 20px;
+    height: calc(100vh - 55px);
+}
+
+.header {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button {
+    background-color: black;
+    justify-content: center;
+}
