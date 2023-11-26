@@ -104,7 +104,10 @@ export default class MissionDetail extends LightningElement {
         this.isLoading = true;
         if(this.buttonLabel === this.labels.ACCEPT) {
             if(!this.checkRank()) {
-                this.showToast('', this.labels.W_LOW_RANK_MSG.replace('{0}', this.ranksGradation[this.ranksGradation.indexOf(this.mission.Complexity_Rank__c) - 1]), 'warning');
+                let missionLevel = this.ranksGradation.indexOf(this.mission.Complexity_Rank__c);
+                this.showToast('', this.labels.W_LOW_RANK_MSG
+                    .replace('{0}', this.ranksGradation.slice(missionLevel === 0 ? 0 : missionLevel -1, missionLevel + 2).toString())
+                    .replace('{1}', this.hero.Rank__c), 'warning');
                 return;
             }
             let activeMission = await getActiveMissions();
@@ -128,11 +131,13 @@ export default class MissionDetail extends LightningElement {
                 .finally(() => this.isLoading = false)
         } else if (this.buttonLabel === this.labels.COMPLETED) {
             let assignment = this.mission.Mission_Assignments__r.find(obj => obj.Hero__c === this.hero.Id);
+            console.log(JSON.parse(JSON.stringify(this.mission.Mission_Assignments__r)));
             if(!assignment) {
                 return;
             }
             completeMission({assignment : assignment})
                 .then(result => {
+                    console.log('error');
                     let mission = JSON.parse(JSON.stringify(this.mission));
                     mission.Status = this.labels.COMPLETED;
                     this.mission = mission;
@@ -172,10 +177,10 @@ export default class MissionDetail extends LightningElement {
     checkRank() {
         let missionRank = this.mission.Complexity_Rank__c;
         let heroRank = this.ranksGradation.indexOf(this.hero.Rank__c);
+        let heroRange = this.ranksGradation.slice(heroRank === 0 ? 0 : heroRank - 1, heroRank + 2);
+        console.log(heroRange.includes(missionRank));
+        console.log(heroRange);
 
-        const prevIndex = Math.max(0, heroRank - 1);
-        const nextIndex = Math.min(this.ranksGradation.length - 1, heroRank + 1);
-
-        return this.ranksGradation.slice(prevIndex, nextIndex + 1).includes(missionRank);
+        return heroRange.includes(missionRank);
     }
 }

@@ -3,7 +3,8 @@ public with sharing class MissionAssignmentTriggerHandler {
     private final Integer triggerSize;
     private static final String FAILED_STATUS = System.Label.Failed;
     private static final String COMPLETED_STATUS = System.Label.Completed;
-    private static String QUERY_LIST = 'SELECT Id, Status__c, Hero__r.Contact__c, Mission__r.Name, Mission__c, Mission__r.Reward__c FROM Mission_Assignment__c WHERE Mission__c IN MISSION_ID_SET AND Id NOT IN ID_SET';
+    private static List<String> QUERY_LIST = new List<String>{'SELECT Id, Status__c, Hero__r.Contact__c, Mission__r.Name, Mission__c, Mission__r.Reward__c FROM Mission_Assignment__c WHERE Mission__c IN MISSIONS AND Id NOT IN ID_SET',
+                                                              'SELECT Id, Status__c, Hero__r.Contact__c, Mission__r.Name, Mission__c, Mission__r.Reward__c FROM Mission_Assignment__c WHERE Id IN ID_SET'};
     public MissionAssignmentTriggerHandler(Boolean triggerIsExecuting, Integer triggerSize) {
         this.triggerIsExecuting = triggerIsExecuting;
         this.triggerSize = triggerSize;
@@ -29,7 +30,7 @@ public with sharing class MissionAssignmentTriggerHandler {
             Set<Id> recipientIds = new Set<Id>();
             Map<Id, Id> emailRecipientRecordMap = new Map<Id, Id>();
 
-            for(Mission_Assignment__c mission : [SELECT Id, Status__c, Mission__c, Hero__r.Contact__c FROM Mission_Assignment__c WHERE Id IN: winnerMap.keySet()]) {
+            for(Mission_Assignment__c mission : getAssignmentsSOQL(winnerMap.keySet())) {
                 if(mission.Status__c == COMPLETED_STATUS) {
                     winnerIdList.add(mission.Id);
                     missionIdSet.add(mission.Mission__c);
@@ -40,32 +41,38 @@ public with sharing class MissionAssignmentTriggerHandler {
             if(winnerIdList.isEmpty()) {
                 return;
             }
-            List<Superhero_Mission__c> missionSet = [SELECT Id FROM Superhero_Mission__c WHERE Id IN: missionIdSet];
+            List<Superhero_Mission__c> missionSet = getMissionsSOQL(missionIdSet);
 
             String completedEmailTemplateId = Org_Specific_Setting__mdt.getInstance('CompletedEmailTemplateId')?.Value_Text__c;
             String failedEmailTemplateId = Org_Specific_Setting__mdt.getInstance('FailedEmailTemplateId')?.Value_Text__c;
-            String query = QUERY_LIST.replace('ID_SET', prepareStringList(winnerIdList)).replace('MISSION_ID_SET', prepareStringList(winnerIdList));
+
             Database.executeBatch(new EmailMissionBatch(
-                    query,
+                    QUERY_LIST[1].replace('ID_SET', prepareStringList(winnerIdList)),
                     completedEmailTemplateId,
                     'Hero__r.Contact__c',
                     new Set<Superhero_Mission__c>(missionSet)
                 )
             );
 
-            EmailMissionBatch.getSendEmailResults(emailRecipientRecordMap, completedEmailTemplateId);
             Database.executeBatch(new EmailMissionBatch(
-                query,
+                QUERY_LIST[0].replace('ID_SET', prepareStringList(winnerIdList)).replace('MISSIONS', prepareStringList(winnerIdList)),
                 failedEmailTemplateId,
                 new Map<String, String> {'Status__c' => FAILED_STATUS},
                 'Hero__r.Contact__c',
                 null)
             );
         } catch (Exception ex) {
-            system.debug(ex.getStackTraceString());
-            throw new AuraHandledException(ex.getMessage());
+            throw new IllegalArgumentException(ex.getStackTraceString() + ' ' + ex.getMessage());
         }
 
+    }
+
+    private static List<Mission_Assignment__c> getAssignmentsSOQL(Set<Id> heroIds) {
+        return [SELECT Id, Status__c, Mission__c, Hero__r.Contact__c, Hero__c FROM Mission_Assignment__c WHERE Id IN: heroIds];
+    }
+
+    private static List<Superhero_Mission__c> getMissionsSOQL(Set<Id> missionIdSet) {
+        return [SELECT Id FROM Superhero_Mission__c WHERE Id IN: missionIdSet];
     }
 
     public static String prepareStringList(Set<Id> resultString) {

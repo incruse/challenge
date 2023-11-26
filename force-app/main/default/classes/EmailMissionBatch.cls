@@ -1,10 +1,9 @@
-public with sharing class EmailMissionBatch implements Database.Batchable<SObject>, Database.Stateful {
-        public static String QUERY_STRING;
-        public static final String SENDER_NAME = Org_Specific_Setting__mdt.getInstance('SenderName')?.Value_Text__c;
-        public static String EMAIL_TEMPLATE;
-        public static String RECIPIENT_ID_FIELD;
-        public static Set<Superhero_Mission__c> MISSIONS;
-        public static Map<String, String> FIELD_VALUES_MAP;
+public without sharing class EmailMissionBatch implements Database.Batchable<SObject>, Database.Stateful {
+    public String QUERY_STRING;
+    public String EMAIL_TEMPLATE;
+    public String RECIPIENT_ID_FIELD;
+    public Set<Superhero_Mission__c> MISSIONS;
+    public Map<String, String> FIELD_VALUES_MAP;
 
     public EmailMissionBatch(String query, String emailTemplateId, Map<String, String> fieldsValueMap, String recipientIdField, Set<Superhero_Mission__c> missionSet) {
         RECIPIENT_ID_FIELD = recipientIdField;
@@ -46,7 +45,7 @@ public with sharing class EmailMissionBatch implements Database.Batchable<SObjec
             if (!recordToUpdate.isEmpty()) {
                 update scope;
             }
-            if (emailRecipientRecordMap.isEmpty()) {
+            if (!emailRecipientRecordMap.isEmpty()) {
                 getSendEmailResults(emailRecipientRecordMap, EMAIL_TEMPLATE);
             }
         } catch (Exception ex) {
@@ -100,6 +99,5 @@ public with sharing class EmailMissionBatch implements Database.Batchable<SObjec
     }
 
     public void finish(Database.BatchableContext bc) {
-
     }
 }

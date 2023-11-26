@@ -12,6 +12,7 @@
             let state = response.getState();
             if(state === "SUCCESS"){
                 let result = response.getReturnValue();
+                console.log(result);
                 result.missionList.forEach(el => {
                     let completed = false;
                     let inProgress = false;
@@ -19,7 +20,7 @@
                     let failed = false;
                     if(el.hasOwnProperty('Mission_Assignments__r')) {
                         el.Mission_Assignments__r.forEach(ma => {
-                            if(ma.Hero__r.Contact__r.OwnerId === userId) {
+                            if(ma.Hero__c === result.Hero.Id) {
                                 el.Status = ma.Status__c;
                                 inProgress = ma.Status__c === labels.IN_PROGRESS;
                                 completed = ma.Status__c === labels.COMPLETED;
