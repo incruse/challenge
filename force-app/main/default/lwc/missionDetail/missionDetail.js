@@ -87,7 +87,6 @@ export default class MissionDetail extends LightningElement {
         this.mission = mission;
         this.hero = message.hero;
         this.isSelected = message.mission.isSelected;
-        console.log(mission.isSelected);
     }
     connectedCallback() {
         this.subscribeToMessageChannel();
@@ -139,10 +138,6 @@ export default class MissionDetail extends LightningElement {
                     this.mission = mission;
                     this.updateMissionAssignment(result, this.labels.S_COMPLETED_MSG, 'UPDATE');
                     this.isSelected = true;
-                    console.log('sent to aura');
-                    console.log(mission.isSelected);
-
-
                 })
                 .catch(error => {
                     this.showToast('', error.body.message, 'error');
@@ -183,15 +178,4 @@ export default class MissionDetail extends LightningElement {
 
         return this.ranksGradation.slice(prevIndex, nextIndex + 1).includes(missionRank);
     }
-
-    async checkMissionLimit() {
-        getActiveMissions()
-            .then(result => {
-            return result;
-        })
-        .catch(error => {
-            this.showToast('', error.body.message, 'error');
-        });
-    }
-
 }

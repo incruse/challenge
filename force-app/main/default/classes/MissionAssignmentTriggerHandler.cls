@@ -3,7 +3,7 @@ public with sharing class MissionAssignmentTriggerHandler {
     private final Integer triggerSize;
     private static final String FAILED_STATUS = System.Label.Failed;
     private static final String COMPLETED_STATUS = System.Label.Completed;
-    private static String QUERY_LIST = 'SELECT Id, Status__c, Hero__r.Contact__c FROM Mission_Assignment__c WHERE Mission__c IN MISSION_ID_SET AND Id NOT IN ID_SET';
+    private static String QUERY_LIST = 'SELECT Id, Status__c, Hero__r.Contact__c, Mission__r.Name, Mission__c, Mission__r.Reward__c FROM Mission_Assignment__c WHERE Mission__c IN MISSION_ID_SET AND Id NOT IN ID_SET';
     public MissionAssignmentTriggerHandler(Boolean triggerIsExecuting, Integer triggerSize) {
         this.triggerIsExecuting = triggerIsExecuting;
         this.triggerSize = triggerSize;
@@ -25,30 +25,45 @@ public with sharing class MissionAssignmentTriggerHandler {
     private static void missionCompletedHandler(Map<Id, Mission_Assignment__c> winnerMap) {
         try {
             Set<Id> winnerIdList = new Set<Id>();
-            Set<Id> missionSet = new Set<Id>();
+            Set<Id> missionIdSet = new Set<Id>();
             Set<Id> recipientIds = new Set<Id>();
-            for(Mission_Assignment__c mission : winnerMap.values()) {
+            Map<Id, Id> emailRecipientRecordMap = new Map<Id, Id>();
+
+            for(Mission_Assignment__c mission : [SELECT Id, Status__c, Mission__c, Hero__r.Contact__c FROM Mission_Assignment__c WHERE Id IN: winnerMap.keySet()]) {
                 if(mission.Status__c == COMPLETED_STATUS) {
                     winnerIdList.add(mission.Id);
-                    missionSet.add(mission.Mission__c);
-                    recipientIds.add(mission.Hero__r.Contact__c);
+                    missionIdSet.add(mission.Mission__c);
                 }
+                recipientIds.add(mission.Hero__r.Contact__c);
+                emailRecipientRecordMap.put(mission.Hero__r.Contact__c, mission.Mission__c);
             }
             if(winnerIdList.isEmpty()) {
                 return;
             }
+            List<Superhero_Mission__c> missionSet = [SELECT Id FROM Superhero_Mission__c WHERE Id IN: missionIdSet];
+
             String completedEmailTemplateId = Org_Specific_Setting__mdt.getInstance('CompletedEmailTemplateId')?.Value_Text__c;
             String failedEmailTemplateId = Org_Specific_Setting__mdt.getInstance('FailedEmailTemplateId')?.Value_Text__c;
-            EmailMissionBatch.getSendEmailResults(winnerIdList,recipientIds, completedEmailTemplateId);
             String query = QUERY_LIST.replace('ID_SET', prepareStringList(winnerIdList)).replace('MISSION_ID_SET', prepareStringList(winnerIdList));
+            Database.executeBatch(new EmailMissionBatch(
+                    query,
+                    completedEmailTemplateId,
+                    'Hero__r.Contact__c',
+                    new Set<Superhero_Mission__c>(missionSet)
+                )
+            );
+
+            EmailMissionBatch.getSendEmailResults(emailRecipientRecordMap, completedEmailTemplateId);
             Database.executeBatch(new EmailMissionBatch(
                 query,
                 failedEmailTemplateId,
                 new Map<String, String> {'Status__c' => FAILED_STATUS},
-                'Hero__r.Contact__c')
+                'Hero__r.Contact__c',
+                null)
             );
         } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getMessage());
+            system.debug(ex.getStackTraceString());
+            throw new AuraHandledException(ex.getMessage());
         }
 
     }

@@ -42,7 +42,7 @@
                         </div>
                         <div class="slds-align-middle slds-size_2-of-12 slds-p-left_x-small">
                             <lightning:badge class="{!(mission.Status == v.labels.IN_PROGRESS ? 'slds-badge' :
-                                    mission.Status == v.labels.COMPLETED ? 'slds-badge_inverse' : mission.Status == v.labels.AVAILABLE ? 'slds-badge slds-theme_success' : 'slds-theme_error')}"
+                                mission.Status == v.labels.COMPLETED ? 'slds-badge_inverse' : mission.Status == v.labels.AVAILABLE ? 'slds-badge slds-theme_success' : 'slds-theme_error')}"
                                 label="{!mission.Status}"/>
                         </div>
                     </div>
