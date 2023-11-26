@@ -143,7 +143,7 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <enableActivities>false</enableActivities>
+    <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
     <enableHistory>false</enableHistory>
@@ -155,6 +155,7 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>Superhero Mission</label>
     <nameField>
+        <displayFormat>M-{0000}</displayFormat>
         <label>Name</label>
         <type>AutoNumber</type>
     </nameField>
