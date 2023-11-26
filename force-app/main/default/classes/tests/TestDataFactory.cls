@@ -13,9 +13,23 @@ public class TestDataFactory {
         List<User> communityUsers = new List<User>();
 
         List<Guild__c> guilds = createGuild(100);
-        for(Guild__c guild : guilds) {
+        insert guilds;
 
-        }
+        List<Hero__c> heroes = createHero(conList, 'A', guilds);
+        insert heroes;
+
+        List<Superhero_Mission__c> missions = createMission(10, true, guilds[0].Id, 'A');
+        missions.addAll(createMission(10, true, guilds[1].Id, 'B'));
+        missions.addAll(createMission(10, true, guilds[2].Id, 'C'));
+        missions.addAll(createMission(10, true, guilds[3].Id, 'D'));
+        missions.addAll(createMission(10, true, guilds[4].Id, 'S'));
+        missions.addAll(createMission(10, true, null, 'S'));
+        insert missions;
+
+        Map<Superhero_Mission__c, List<Hero__c>> maMap = new Map<Superhero_Mission__c, List<Hero__c>>();
+        maMap.put(missions[0], heroes);
+        insert createMissionAssignment(maMap);
+
 
 
 //        insert createMission(50, true, );

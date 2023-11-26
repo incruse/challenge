@@ -52,20 +52,18 @@ public with sharing class AllMissionsController {
         private Boolean isCommunityUser;
         private final String USER_ID = UserInfo.getUserId();
         private String HERO_ID;
-        private final String FAILED_STATUS = System.Label.Failed;
         private final String COMPLETED_STATUS = System.Label.Completed;
         private final String IN_PROGRESS_STATUS = System.Label.In_Progress;
         private final String NO_GUILD_MESSAGE = System.Label.No_Guild_Error_Message;
         private final String NO_ACCESS_MESSAGE = System.Label.No_Access_to_the_site;
-        private final String PARTNER_COMMUNITY = 'Partner Community';
+        private final String PARTNER_COMMUNITY = 'Customer Community Plus';
 
         AllMissionsControllerHelper() {
             User currentUser = [SELECT Id, ContactId, Profile.UserLicense.Name FROM User WHERE Id =: USER_ID LIMIT 1];
             isCommunityUser = currentUser.Profile.UserLicense.Name == PARTNER_COMMUNITY;
-            system.debug(currentUser.Profile.UserLicense.Name == PARTNER_COMMUNITY);
             HERO_ID = [SELECT Id FROM Hero__c WHERE Contact__c =: currentUser.ContactId LIMIT 1].Id;
             if(currentUser.Profile.UserLicense.Name != PARTNER_COMMUNITY) {
-                throw new AuraHandledException(NO_ACCESS_MESSAGE)   ;
+                throw new AuraHandledException(NO_ACCESS_MESSAGE);
             }
         }
 
@@ -78,15 +76,6 @@ public with sharing class AllMissionsController {
         }
 
         public Mission_Assignment__c acceptMission(Superhero_Mission__c mission, Hero__c hero) {
-            //-----
-            String objectApiName = 'Hero__c';
-            String fieldApiName = 'Contact__c';
-            Schema.DescribeFieldResult fieldDescribe = Schema.getGlobalDescribe().get(objectApiName).getDescribe().fields.getMap().get(fieldApiName).getDescribe();
-
-            Boolean isAccessible = fieldDescribe.isAccessible();
-            System.debug('isAccessible: ' + isAccessible);
-            //-----
-
             try {
                 Mission_Assignment__c assignment = new Mission_Assignment__c(
                     Hero__c = hero.Id,
@@ -143,7 +132,7 @@ public with sharing class AllMissionsController {
         private List<Superhero_Mission__c> getSuperheroMissionsSQOL(Integer offSet, String guildId) {
             try {
                 String query = 'SELECT Id, Complexity_Rank__c, Deadline__c, Is_Public__c, Reward__c, Details__c, Name, Guild__c, Guild__r.Name, Subject__c, ' +
-                        '(SELECT Id, Name, Hero__r.Contact__r.OwnerId, Hero__c, Hero__r.Name, Hero__r.Contact__r.Name, Mission__c, Status__c ' +
+                        '(SELECT Id, Name, Hero__c, Hero__r.Name, Hero__r.Contact__r.Name, Mission__c, Status__c ' +
                         'FROM Mission_Assignments__r WHERE Hero__c =: HERO_ID) ' +
                         'FROM Superhero_Mission__c ' +
                         'WHERE Is_Public__c = true ' +
@@ -158,7 +147,7 @@ public with sharing class AllMissionsController {
 
         private Hero__c getHero() {
             try {
-                return [SELECT Id, Rank__c, Guild__c, Guild__r.Name FROM Hero__c WHERE Id = :HERO_ID LIMIT 1];
+                return [SELECT Id, Rank__c, Guild__c, Contact__c, Guild__r.Name FROM Hero__c WHERE Id = :HERO_ID LIMIT 1];
             } catch (Exception ex) {
                 throw new AuraHandledException(ex.getStackTraceString() + ' ' + ex.getMessage());
             }
