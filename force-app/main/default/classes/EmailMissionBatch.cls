@@ -53,23 +53,19 @@ public without sharing class EmailMissionBatch implements Database.Batchable<SOb
                 getSendEmailResults(emailRecipientRecordMap, EMAIL_TEMPLATE);
             }
         } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getStackTraceString() + ' ' + ex.getMessage());
+            throw new IllegalArgumentException(ex.getMessage());
         }
     }
-    public static List<Messaging.SendEmailResult> getSendEmailResults(Map<Id, Id> emailRecipientRecordMap, String emailTemplateId) {
-        try {
-            List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
-            for(Id recipient : emailRecipientRecordMap.keySet()) {
-                Messaging.SingleEmailMessage mail = Messaging.renderStoredEmailTemplate(emailTemplateId, null, emailRecipientRecordMap.get(recipient));
-                mail.setTargetObjectId(recipient);
-                mail.setSaveAsActivity(false);
-                emails.add(mail);
-            }
-
-            return Messaging.sendEmail(emails);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getStackTraceString());
+    private static List<Messaging.SendEmailResult> getSendEmailResults(Map<Id, Id> emailRecipientRecordMap, String emailTemplateId) {
+        List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
+        for(Id recipient : emailRecipientRecordMap.keySet()) {
+            Messaging.SingleEmailMessage mail = Messaging.renderStoredEmailTemplate(emailTemplateId, null, emailRecipientRecordMap.get(recipient));
+            mail.setTargetObjectId(recipient);
+            mail.setSaveAsActivity(false);
+            emails.add(mail);
         }
+
+        return Messaging.sendEmail(emails);
     }
 
     public static Object castStringToFieldType(Schema.DisplayType fieldType, String stringValue) {

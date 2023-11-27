@@ -1,9 +1,9 @@
 <template>
-    <template if:true={isLoading}>
+    <template lwc:if={isLoading}>
         <lightning-spinner size="medium"></lightning-spinner>
     </template>
-    <div class="slds-m-around_small card slds-p-around_medium slds-p-top_large">
-        <template if:true={isSelected}>
+    <div class="slds-m-around_small slds-card slds-color__background_gray-1 slds-color__border_gray-1 card slds-p-around_medium slds-p-top_large">
+        <template lwc:if={isSelected}>
             <div class="slds-p-around_small">
                 <div class="slds-grid slds-grid_align-spread">
                     <div class="slds-grid">
@@ -57,19 +57,19 @@
                             <span>{mission.Deadline__c}</span>
                         </div>
                     </div>
-                    <div class="slds-p-top_x-large slds-align_absolute-center" if:true={showButton}>
-                        <lightning-button
-                                label={buttonLabel}
-                                class="slds-button slds-p-left_xx-large slds-p-right_xx-large button"
-                                title={buttonLabel}
-                                onclick={buttonHandler}>
-                        </lightning-button>
-<!--                        <button class="button slds-button slds-text-color_inverse slds-size_1-of-3 slds-text-align_center" title={buttonLabel} >{buttonLabel}</button>-->
+                    <div class="slds-p-top_x-large slds-align_absolute-center" lwc:if={showButton}>
+<!--                        <lightning-button-->
+<!--                                label={buttonLabel}-->
+<!--                                class="button"-->
+<!--                                title={buttonLabel}-->
+<!--                                onclick={buttonHandler}>-->
+<!--                        </lightning-button>-->
+                        <button class="button slds-button slds-text-color_inverse slds-size_1-of-3 slds-text-align_center" title={buttonLabel} onclick={buttonHandler}>{buttonLabel}</button>
                     </div>
                 </div>
             </div>
         </template>
-        <template if:false={isSelected}>
+        <template lwc:else>
             <div class="slds-grid slds-align_absolute-center slds-p-top_small">
                 <span>{labels.NO_SELECTED}</span>
             </div>
