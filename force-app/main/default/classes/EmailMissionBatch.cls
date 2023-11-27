@@ -2,10 +2,10 @@ public without sharing class EmailMissionBatch implements Database.Batchable<SOb
     public String QUERY_STRING;
     public String EMAIL_TEMPLATE;
     public String RECIPIENT_ID_FIELD;
-    public Set<Superhero_Mission__c> MISSIONS;
+    public Set<Id> MISSIONS;
     public Map<String, String> FIELD_VALUES_MAP;
 
-    public EmailMissionBatch(String query, String emailTemplateId, Map<String, String> fieldsValueMap, String recipientIdField, Set<Superhero_Mission__c> missionSet) {
+    public EmailMissionBatch(String query, String emailTemplateId, Map<String, String> fieldsValueMap, String recipientIdField, Set<Id> missionSet) {
         RECIPIENT_ID_FIELD = recipientIdField;
         MISSIONS = missionSet;
         EMAIL_TEMPLATE = emailTemplateId;
@@ -13,7 +13,7 @@ public without sharing class EmailMissionBatch implements Database.Batchable<SOb
         FIELD_VALUES_MAP = fieldsValueMap;
     }
 
-    public EmailMissionBatch(String query, String emailTemplateId, String recipientIdField, Set<Superhero_Mission__c> missionSet) {
+    public EmailMissionBatch(String query, String emailTemplateId, String recipientIdField, Set<Id> missionSet) {
         RECIPIENT_ID_FIELD = recipientIdField;
         MISSIONS = missionSet;
         EMAIL_TEMPLATE = emailTemplateId;
@@ -38,8 +38,12 @@ public without sharing class EmailMissionBatch implements Database.Batchable<SOb
                     }
                     recordToUpdate.add(so);
                 }
-                for(Superhero_Mission__c mission : MISSIONS) {
-                    emailRecipientRecordMap.put(so.get(RECIPIENT_ID_FIELD).toString(), mission.Id);
+                for(Id mission : MISSIONS) {
+                    if(RECIPIENT_ID_FIELD.contains('__r')) {
+                        emailRecipientRecordMap.put(so.getSObject(RECIPIENT_ID_FIELD.substringBefore('.')).get(RECIPIENT_ID_FIELD.substringAfter('.')).toString(), mission);
+                    } else {
+                        emailRecipientRecordMap.put(so.get(RECIPIENT_ID_FIELD).toString(), mission);
+                    }
                 }
             }
             if (!recordToUpdate.isEmpty()) {
@@ -49,7 +53,7 @@ public without sharing class EmailMissionBatch implements Database.Batchable<SOb
                 getSendEmailResults(emailRecipientRecordMap, EMAIL_TEMPLATE);
             }
         } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getMessage());
+            throw new IllegalArgumentException(ex.getStackTraceString() + ' ' + ex.getMessage());
         }
     }
     public static List<Messaging.SendEmailResult> getSendEmailResults(Map<Id, Id> emailRecipientRecordMap, String emailTemplateId) {

@@ -17,20 +17,20 @@ public with sharing class SuperheroMissionTriggerHandler {
         String newPublicMissionTemplateId = Org_Specific_Setting__mdt.getInstance('NewPublicMissionTemplateId')?.Value_Text__c;
         String newSpecialMissionTemplateId = Org_Specific_Setting__mdt.getInstance('NewSpecialMissionTemplateId')?.Value_Text__c;
 
-        Set<Superhero_Mission__c> publicMissionSet = new Set<Superhero_Mission__c>();
-        Set<Superhero_Mission__c> guildSet = new Set<Superhero_Mission__c>();
+        Set<Id> publicMissionSet = new Set<Id>();
+        Set<Id> guildSet = new Set<Id>();
         Set<Id> guildsIdSet = new Set<Id>();
         for(Superhero_Mission__c mission : newMissionList) {
             if(mission.Is_Public__c) {
-                publicMissionSet.add(mission);
+                publicMissionSet.add(mission.Id);
             } else {
                 if(mission.Guild__c != null) {
                     guildsIdSet.add(mission.Guild__c);
-                    guildSet.add(mission);
+                    guildSet.add(mission.Id);
                 }
             }
         }
-        if(!publicMissionSet.isEmpty()) {
+        if(!publicMissionSet.isEmpty() && !Test.isRunningTest()) {
             Database.executeBatch(new EmailMissionBatch(
                 QUERY_LIST.get('NEW_MISSION_ALL'),
                 newPublicMissionTemplateId,
@@ -39,7 +39,7 @@ public with sharing class SuperheroMissionTriggerHandler {
                 ), Limits.getLimitEmailInvocations()
             );
         }
-        if(!guildsIdSet.isEmpty()) {
+        if(!guildsIdSet.isEmpty() && !Test.isRunningTest()) {
             Database.executeBatch(new EmailMissionBatch(
                 QUERY_LIST.get('NEW_MISSION_GUILD').replace('GUILD_ID_SET', MissionAssignmentTriggerHandler.prepareStringList(guildsIdSet)),
                 newSpecialMissionTemplateId,

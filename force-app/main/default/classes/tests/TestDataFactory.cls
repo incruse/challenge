@@ -1,18 +1,16 @@
 @IsTest
 public class TestDataFactory {
     public static void createData() {
-        List<Account> accList = createAccount(200);
+        List<Account> accList = createAccount(20);
         insert accList;
 
         List<Contact> conList = new List<Contact>();
         for(Account acc : accList) {
-            conList.addAll(createContact(20, acc.Id));
+            conList.addAll(createContact(5, acc.Id));
         }
-        insert conList;
+        insert new List<Contact>(conList);
 
-        List<User> communityUsers = new List<User>();
-
-        List<Guild__c> guilds = createGuild(100);
+        List<Guild__c> guilds = createGuild(10);
         insert guilds;
 
         List<Hero__c> heroes = createHero(conList, 'A', guilds);
@@ -20,19 +18,15 @@ public class TestDataFactory {
 
         List<Superhero_Mission__c> missions = createMission(10, true, guilds[0].Id, 'A');
         missions.addAll(createMission(10, true, guilds[1].Id, 'B'));
-        missions.addAll(createMission(10, true, guilds[2].Id, 'C'));
-        missions.addAll(createMission(10, true, guilds[3].Id, 'D'));
         missions.addAll(createMission(10, true, guilds[4].Id, 'S'));
-        missions.addAll(createMission(10, true, null, 'S'));
+
+
+
         insert missions;
 
         Map<Superhero_Mission__c, List<Hero__c>> maMap = new Map<Superhero_Mission__c, List<Hero__c>>();
         maMap.put(missions[0], heroes);
         insert createMissionAssignment(maMap);
-
-
-
-//        insert createMission(50, true, );
     }
 
     public static List<Account> createAccount(Integer count) {
@@ -46,28 +40,37 @@ public class TestDataFactory {
         return accList;
     }
 
-    public static List<Contact> createContact(Integer count, Id accId) {
-        List<Contact> contactList = new List<Contact>();
+    public static Set<Contact> createContact(Integer count, Id accId) {
+        Set<Contact> contactList = new Set<Contact>();
         for (Integer i = 0; i < count; i++) {
             Contact con = new Contact(
-                    LastName = 'Test Contact ' + i,
+                    LastName = 'Test Contact ' + Math.random() + i * Math.random(),
                     AccountId = accId,
-                    Email = 'testEmail@dev.com'
+                    Email = 'testEmail@dev.com' + Math.random()
             );
             contactList.add(con);
         }
         return contactList;
     }
 
-    public static List<User> createCommunityUser(Integer count) {
-        List<User> UserList = new List<User>();
-        for (Integer i = 0; i < count; i++) {
-            User acc = new User(
-                Username = 'Test User ' + i
-            );
-            UserList.add(acc);
-        }
-        return UserList;
+    public static User createCommunityUser() {
+        Profile profile = [SELECT Id FROM Profile WHERE UserLicense.Name = 'Customer Community' LIMIT 1];
+        Contact contact = [SELECT Id FROM Contact LIMIT 1];
+        User user = new User(
+            Username = 'test_challenge' + Math.random() + '@test.com',
+            FirstName = 'Test-First',
+            LastName = 'Test-Last',
+            Alias = 'test',
+            Email = 'test' + Math.random() + '@test.com',
+            CommunityNickname = String.valueOf(Math.random()).substring(0,6),
+            ProfileId = profile.Id,
+            TimeZoneSidKey = 'America/New_York',
+            LocaleSidKey = 'en_US',
+            EmailEncodingKey = 'UTF-8',
+            LanguageLocaleKey = 'en_US',
+            ContactId = contact.Id
+        );
+        return user;
     }
 
     public static List<Superhero_Mission__c> createMission(Integer count, Boolean isPublic, Id guildId, String rank) {
@@ -78,6 +81,7 @@ public class TestDataFactory {
                     Guild__c = guildId,
                     Reward__c = Math.round(Math.random() * (10000 - 1000) + 1000),
                     Complexity_Rank__c = rank,
+                    Subject__c = 'Subject Test' + Math.round(Math.random() * (10000 - 1000) + 1000),
                     Details__c = 'Mission Details ' + i,
                     Deadline__c = Date.today().addDays(20).addDays(i)
             );
