@@ -49,14 +49,13 @@ public with sharing class AllMissionsController {
     }
 
     private without sharing class AllMissionsControllerHelper {
-        private Boolean isCommunityUser;
+        private final Boolean isCommunityUser;
         private final String USER_ID = UserInfo.getUserId();
-        private String HERO_ID;
+        private final String HERO_ID;
         private final String COMPLETED_STATUS = System.Label.Completed;
         private final String IN_PROGRESS_STATUS = System.Label.In_Progress;
         private final String NO_GUILD_MESSAGE = System.Label.No_Guild_Error_Message;
         private final String NO_ACCESS_MESSAGE = System.Label.No_Access_to_the_site;
-        private final String PARTNER_COMMUNITY = 'Customer Community Plus';
 
         AllMissionsControllerHelper() {
             User currentUser = [SELECT Id, ContactId FROM User WHERE Id =: USER_ID LIMIT 1];
