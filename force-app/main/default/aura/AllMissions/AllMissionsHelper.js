@@ -12,7 +12,6 @@
             let state = response.getState();
             if(state === "SUCCESS"){
                 let result = response.getReturnValue();
-                console.log(result);
                 result.missionList.forEach(el => {
                     let completed = false;
                     let inProgress = false;

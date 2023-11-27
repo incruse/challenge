@@ -131,13 +131,11 @@ export default class MissionDetail extends LightningElement {
                 .finally(() => this.isLoading = false)
         } else if (this.buttonLabel === this.labels.COMPLETED) {
             let assignment = this.mission.Mission_Assignments__r.find(obj => obj.Hero__c === this.hero.Id);
-            console.log(JSON.parse(JSON.stringify(this.mission.Mission_Assignments__r)));
             if(!assignment) {
                 return;
             }
             completeMission({assignment : assignment})
                 .then(result => {
-                    console.log('error');
                     let mission = JSON.parse(JSON.stringify(this.mission));
                     mission.Status = this.labels.COMPLETED;
                     this.mission = mission;
@@ -178,8 +176,6 @@ export default class MissionDetail extends LightningElement {
         let missionRank = this.mission.Complexity_Rank__c;
         let heroRank = this.ranksGradation.indexOf(this.hero.Rank__c);
         let heroRange = this.ranksGradation.slice(heroRank === 0 ? 0 : heroRank - 1, heroRank + 2);
-        console.log(heroRange.includes(missionRank));
-        console.log(heroRange);
 
         return heroRange.includes(missionRank);
     }

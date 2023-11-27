@@ -59,10 +59,10 @@ public with sharing class AllMissionsController {
         private final String PARTNER_COMMUNITY = 'Customer Community Plus';
 
         AllMissionsControllerHelper() {
-            User currentUser = [SELECT Id, ContactId, Profile.UserLicense.Name FROM User WHERE Id =: USER_ID LIMIT 1];
-            isCommunityUser = currentUser.Profile.UserLicense.Name == PARTNER_COMMUNITY;
+            User currentUser = [SELECT Id, ContactId FROM User WHERE Id =: USER_ID LIMIT 1];
+            isCommunityUser = currentUser.ContactId != null;
             HERO_ID = [SELECT Id FROM Hero__c WHERE Contact__c =: currentUser.ContactId LIMIT 1].Id;
-            if(currentUser.Profile.UserLicense.Name != PARTNER_COMMUNITY) {
+            if(!isCommunityUser) {
                 throw new AuraHandledException(NO_ACCESS_MESSAGE);
             }
         }
