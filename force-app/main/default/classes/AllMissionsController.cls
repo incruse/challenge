@@ -60,12 +60,11 @@ public with sharing class AllMissionsController {
         AllMissionsControllerHelper() {
             User currentUser = [SELECT Id, ContactId FROM User WHERE Id =: USER_ID LIMIT 1];
             isCommunityUser = currentUser.ContactId != null;
-            Hero__c hero = [SELECT Id FROM Hero__c WHERE Contact__c =: currentUser.ContactId LIMIT 1];
-            if(isCommunityUser && hero != null) {
-                HERO_ID = hero.Id;
-            } else {
+            if(!isCommunityUser) {
                 throw new IllegalArgumentException(NO_ACCESS_MESSAGE);
             }
+            Hero__c hero = [SELECT Id FROM Hero__c WHERE Contact__c =: currentUser.ContactId LIMIT 1];
+            HERO_ID = hero.Id;
         }
 
         public Integer getActiveMissions() {

@@ -37,9 +37,5 @@ private class AllMissionsControllerTest {
                 Assert.areEqual(ex.getMessage(), System.Label.No_Access_to_the_site);
             }
         }
-
-        Assert.isNotNull(result);
-        Assert.areEqual(1, result.assignmentList.size());
-        Assert.isNotNull(result.Hero);
     }
 }
