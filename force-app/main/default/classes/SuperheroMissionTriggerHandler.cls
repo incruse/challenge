@@ -25,20 +25,12 @@ public with sharing class SuperheroMissionTriggerHandler {
         }
         if(!publicMissionSet.isEmpty() && !Test.isRunningTest()) {
             Database.executeBatch(new EmailMissionBatch(
-                QUERY_LIST.get('NEW_MISSION_ALL'),
-                    EMAIL_TEMPLATE_LIST[1],
-                'Contact__c',
-                publicMissionSet
-                ), Limits.getLimitEmailInvocations()
+                QUERY_LIST.get('NEW_MISSION_ALL'), EMAIL_TEMPLATE_LIST[1],'Contact__c', publicMissionSet), Limits.getLimitEmailInvocations()
             );
         }
         if(!guildsIdSet.isEmpty() && !Test.isRunningTest()) {
             Database.executeBatch(new EmailMissionBatch(
-                QUERY_LIST.get('NEW_MISSION_GUILD').replace('GUILD_ID_SET', MissionAssignmentTriggerHandler.prepareStringList(guildsIdSet)),
-                    EMAIL_TEMPLATE_LIST[0],
-                'Contact__c',
-                guildSet
-                ), Limits.getLimitEmailInvocations()
+                QUERY_LIST.get('NEW_MISSION_GUILD').replace('GUILD_ID_SET', MissionAssignmentTriggerHandler.prepareStringList(guildsIdSet)), EMAIL_TEMPLATE_LIST[0],'Contact__c', guildSet), Limits.getLimitEmailInvocations()
             );
         }
     }

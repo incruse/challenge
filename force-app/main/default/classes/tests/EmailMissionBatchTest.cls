@@ -38,9 +38,8 @@ private class EmailMissionBatchTest {
                 missionIdSet
             ), 1
             );
-            Assert.isTrue(Limits.getEmailInvocations() == 0);
-
         }
+        Assert.isTrue(Limits.getEmailInvocations() == 0);
         Test.stopTest();
         Assert.isTrue(Limits.getEmailInvocations() == 0);
         for(AsyncApexJob job : [SELECT Id, MethodName, Status FROM AsyncApexJob]) {

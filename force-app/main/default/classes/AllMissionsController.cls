@@ -29,7 +29,7 @@ public with sharing class AllMissionsController {
     }
 
     @AuraEnabled
-    public static List<Mission_Assignment__c> completeMission(Mission_Assignment__c assignment) {
+    public static Mission_Assignment__c completeMission(Mission_Assignment__c assignment) {
         try{
             return helper.updateAssignments(assignment);
         } catch (Exception ex) {
@@ -84,19 +84,13 @@ public with sharing class AllMissionsController {
             return getMissionAssignmentSQOL(assignment.Id);
         }
 
-        public List<Mission_Assignment__c> updateAssignments(Mission_Assignment__c assignment) {
-            List<Mission_Assignment__c> recordsToUpdate = new List<Mission_Assignment__c>();
-            recordsToUpdate.add(updateAssignment(assignment, COMPLETED_STATUS));
+        public Mission_Assignment__c updateAssignments(Mission_Assignment__c assignment) {
+            Mission_Assignment__c recordsToUpdate = new Mission_Assignment__c(
+                Id = assignment.Id,
+                Status__c = COMPLETED_STATUS
+            );
             update recordsToUpdate;
             return recordsToUpdate;
-        }
-
-        public Mission_Assignment__c updateAssignment(Mission_Assignment__c assignment, String status) {
-            Mission_Assignment__c updatedAssignment = new Mission_Assignment__c(
-                Id = assignment.Id,
-                Status__c = status
-            );
-            return updatedAssignment;
         }
 
         public MissionWrapper getAllMissions(Integer offSet) {

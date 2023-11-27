@@ -4,4 +4,6 @@ private class SuperheroMissionTriggerTest {
     static void testSetup() {
         TestDataFactory.createData();
     }
+
+
 }
