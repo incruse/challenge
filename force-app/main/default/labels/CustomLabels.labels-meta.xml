@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Accept</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Accept</shortDescription>
+        <value>Accept</value>
+    </labels>
+    <labels>
+        <fullName>All_Missions</fullName>
+        <categories>All Missions</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>All Missions</shortDescription>
+        <value>All Missions</value>
+    </labels>
+    <labels>
+        <fullName>Assassins</fullName>
+        <categories>Mission Details</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Assassins</shortDescription>
+        <value>Assassins</value>
+    </labels>
+    <labels>
+        <fullName>Available</fullName>
+        <categories>All Missions</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Available</shortDescription>
+        <value>Available</value>
+    </labels>
+    <labels>
+        <fullName>Complete</fullName>
+        <categories>Button</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Complete</shortDescription>
+        <value>Complete</value>
+    </labels>
+    <labels>
+        <fullName>Completed</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Completed</shortDescription>
+        <value>Completed</value>
+    </labels>
+    <labels>
+        <fullName>Completed_Assignment_Message</fullName>
+        <categories>Messages</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Completed Assignment Message</shortDescription>
+        <value>Congratulations, your earnings are {0}. Keep up the good work!</value>
+    </labels>
+    <labels>
+        <fullName>Create_New_Assignment_Message</fullName>
+        <categories>Messages</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Create New Assignment Message</shortDescription>
+        <value>Great, the mission has started. Hurry to complete it and earn your reward.</value>
+    </labels>
+    <labels>
+        <fullName>Failed</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Failed Status</shortDescription>
+        <value>Failed</value>
+    </labels>
+    <labels>
+        <fullName>Guild</fullName>
+        <categories>All Missions</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Guild</shortDescription>
+        <value>Guild</value>
+    </labels>
+    <labels>
+        <fullName>In_Progress</fullName>
+        <categories>Status</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>In Progress</shortDescription>
+        <value>In Progress</value>
+    </labels>
+    <labels>
+        <fullName>Limit_Active_Mission_Message</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Limit Active Mission Message</shortDescription>
+        <value>You can only take three missions at a time. Finish the previous ones to take a new one.</value>
+    </labels>
+    <labels>
+        <fullName>Low_Rank_Warning_Message</fullName>
+        <categories>Messages</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Low Rank Warning Message</shortDescription>
+        <value>Unfortunately, your rank is not high enough. This mission for {0} levels, but yours is {1}.</value>
+    </labels>
+    <labels>
+        <fullName>Mission</fullName>
+        <categories>All Missions</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mission</shortDescription>
+        <value>Mission</value>
+    </labels>
+    <labels>
+        <fullName>Mission_Details</fullName>
+        <categories>Mission Details</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Mission Details</shortDescription>
+        <value>Mission Details</value>
+    </labels>
+    <labels>
+        <fullName>No_Access_to_the_site</fullName>
+        <categories>Messages</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No Access to the site</shortDescription>
+        <value>This site allowed only for Partner Community Users</value>
+    </labels>
+    <labels>
+        <fullName>No_Guild_Error_Message</fullName>
+        <categories>Messages</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No Guild Error Message</shortDescription>
+        <value>Hero doesn&apos;t have Guild</value>
+    </labels>
+    <labels>
+        <fullName>No_Selected_Message</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No Selected Message</shortDescription>
+        <value>Select a mission to learn more about it</value>
+    </labels>
+    <labels>
+        <fullName>Rank</fullName>
+        <categories>All Missions</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Rank</shortDescription>
+        <value>Rank</value>
+    </labels>
+    <labels>
+        <fullName>Status</fullName>
+        <categories>All Missions</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status</shortDescription>
+        <value>Status</value>
+    </labels>
+</CustomLabels>

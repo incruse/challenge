@@ -1,0 +1,9 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+<p>Hello!<br />
+A new mission is available for your&nbsp;<strong>{{{Superhero_Mission__c.Guild__c}}}</strong> guild - <strong>{{{Superhero_Mission__c.Subject__c}}}</strong>! Come in quickly and take on the challenge to earn money!</p>
+</body>
+</html>

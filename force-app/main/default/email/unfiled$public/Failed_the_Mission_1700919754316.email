@@ -1,0 +1,9 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body style="height: auto; min-height: auto;">
+<p>Hello!<br />
+Unfortunately, another Hero has completed the mission&nbsp;<strong>{{{Superhero_Mission__c.Subject__c}}}</strong> before you. Keep trying and stay ahead. Best of luck!</p>
+</body>
+</html>
