@@ -13,11 +13,10 @@
 }
 
 .header {
-    justify-content: space-between;
-    align-items: center;
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
 }
 
 .button {
     background-color: black;
-    justify-content: center;
 }

@@ -5,14 +5,14 @@
     <div class="slds-m-around_small card slds-p-around_medium slds-p-top_large">
         <template if:true={isSelected}>
             <div class="slds-p-around_small">
-                <div class="slds-grid header">
+                <div class="slds-grid slds-grid_align-spread">
                     <div class="slds-grid">
                         <span class="slds-text-heading_large">{labels.MISSION_DETAILS}</span>
                         <lightning-icon icon-name="utility:connected_apps" class="lightning-icon-orange" title={labels.MISSION_DETAILS}></lightning-icon>
                     </div>
                     <div class="slds-grid">
                         <lightning-icon icon-name="utility:http" size="small" class="lightning-icon-black" title={labels.ASSASSINS}></lightning-icon>
-                        <span class="slds-text-heading_medium">{labels.ASSASSINS}</span>
+                        <span class="slds-p-left_x-small slds-text-heading_medium">{labels.ASSASSINS}</span>
                     </div>
                 </div>
 
@@ -58,7 +58,13 @@
                         </div>
                     </div>
                     <div class="slds-p-top_x-large slds-align_absolute-center" if:true={showButton}>
-                        <button class="button slds-button slds-text-color_inverse slds-size_1-of-3 slds-text-align_center" title={buttonLabel} onclick={buttonHandler}>{buttonLabel}</button>
+                        <lightning-button
+                                label={buttonLabel}
+                                class="slds-button slds-p-left_xx-large slds-p-right_xx-large button"
+                                title={buttonLabel}
+                                onclick={buttonHandler}>
+                        </lightning-button>
+<!--                        <button class="button slds-button slds-text-color_inverse slds-size_1-of-3 slds-text-align_center" title={buttonLabel} >{buttonLabel}</button>-->
                     </div>
                 </div>
             </div>

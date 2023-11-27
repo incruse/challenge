@@ -1,26 +1,15 @@
 public with sharing class MissionAssignmentTriggerHandler {
-    private final Boolean triggerIsExecuting;
-    private final Integer triggerSize;
     private static final String FAILED_STATUS = System.Label.Failed;
     private static final String COMPLETED_STATUS = System.Label.Completed;
+    private static final List<String> EMAIL_TEMPLATE_LIST = new List<String>{'Complete the Mission', 'Failed the Mission'};
     private static List<String> QUERY_LIST = new List<String>{'SELECT Id, Status__c, Hero__r.Contact__c, Mission__c, Mission__r.Reward__c FROM Mission_Assignment__c WHERE Mission__c IN MISSIONS AND Id NOT IN ID_SET',
                                                               'SELECT Id, Status__c, Hero__r.Contact__c, Mission__c, Mission__r.Reward__c FROM Mission_Assignment__c WHERE Id IN ID_SET'};
-    public MissionAssignmentTriggerHandler(Boolean triggerIsExecuting, Integer triggerSize) {
-        this.triggerIsExecuting = triggerIsExecuting;
-        this.triggerSize = triggerSize;
-    }
-    public void afterUpdate(
+    public static void afterUpdate(
             List<Mission_Assignment__c> newMissionList,
             List<Mission_Assignment__c> oldMissionList,
             Map<Id, Mission_Assignment__c> oldMissionMap,
             Map<Id, Mission_Assignment__c> newMissionMap) {
         missionCompletedHandler(newMissionMap);
-    }
-    public void beforeUpdate(
-            List<Mission_Assignment__c> newMissionList,
-            List<Mission_Assignment__c> oldMissionList,
-            Map<Id, Mission_Assignment__c> oldMissionMap,
-            Map<Id, Mission_Assignment__c> newMissionMap) {
     }
 
     private static void missionCompletedHandler(Map<Id, Mission_Assignment__c> winnerMap) {
@@ -41,13 +30,15 @@ public with sharing class MissionAssignmentTriggerHandler {
             if(winnerIdList.isEmpty()) {
                 return;
             }
-            String completedEmailTemplateId = Org_Specific_Setting__mdt.getInstance('CompletedEmailTemplateId')?.Value_Text__c;
-            String failedEmailTemplateId = Org_Specific_Setting__mdt.getInstance('FailedEmailTemplateId')?.Value_Text__c;
+            List<EmailTemplate> emailTemplateList = [SELECT Id FROM EmailTemplate WHERE Name IN : EMAIL_TEMPLATE_LIST ORDER BY Name ASC LIMIT 2];
+            if(emailTemplateList.size() < 2) {
+                throw new IllegalArgumentException('Email Templates not found');
+            }
 
             if(!winnerIdList.isEmpty() && !Test.isRunningTest()) {
                 Database.executeBatch(new EmailMissionBatch(
                     QUERY_LIST[1].replace('ID_SET', prepareStringList(winnerIdList)),
-                    completedEmailTemplateId,
+                    emailTemplateList[0].Id,
                     'Hero__r.Contact__c',
                     missionIdSet
                     )
@@ -57,24 +48,20 @@ public with sharing class MissionAssignmentTriggerHandler {
             if(!winnerIdList.isEmpty() && !Test.isRunningTest()) {
                 Database.executeBatch(new EmailMissionBatch(
                     QUERY_LIST[0].replace('ID_SET', prepareStringList(winnerIdList)).replace('MISSIONS', prepareStringList(winnerIdList)),
-                    failedEmailTemplateId,
+                    emailTemplateList[1].Id,
                     new Map<String, String> {'Status__c' => FAILED_STATUS},
                     'Hero__r.Contact__c',
                     missionIdSet)
                 );
             }
         } catch (Exception ex) {
-            throw new IllegalArgumentException(ex.getStackTraceString() + ' ' + ex.getMessage());
+            throw new IllegalArgumentException(ex.getMessage());
         }
 
     }
 
     private static List<Mission_Assignment__c> getAssignmentsSOQL(Set<Id> heroIds) {
         return [SELECT Id, Status__c, Mission__c, Hero__r.Contact__c, Hero__c FROM Mission_Assignment__c WHERE Id IN: heroIds];
-    }
-
-    private static List<Superhero_Mission__c> getMissionsSOQL(Set<Id> missionIdSet) {
-        return [SELECT Id FROM Superhero_Mission__c WHERE Id IN: missionIdSet];
     }
 
     public static String prepareStringList(Set<Id> resultString) {
