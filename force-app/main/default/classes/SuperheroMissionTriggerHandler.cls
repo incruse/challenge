@@ -15,14 +15,14 @@ public with sharing class SuperheroMissionTriggerHandler {
                 }
             }
         }
-        if(!publicMissionSet.isEmpty() && !Test.isRunningTest()) {
+        if(!publicMissionSet.isEmpty()) {
             Database.executeBatch(new EmailMissionBatch(
                     'NEW_PUBLIC_MISSION',
                     publicMissionSet
             ), Limits.getLimitEmailInvocations()
             );
         }
-        if(!guildSet.isEmpty() && !Test.isRunningTest()) {
+        if(!guildSet.isEmpty()) {
             Database.executeBatch(new EmailMissionBatch(
                     'NEW_SPECIAL_MISSION',
                     guildSet

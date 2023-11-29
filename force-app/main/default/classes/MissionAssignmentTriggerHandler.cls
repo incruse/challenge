@@ -16,21 +16,21 @@ public with sharing class MissionAssignmentTriggerHandler {
                 }
             }
 
-            if(!Test.isRunningTest()) {
+//            if(!Test.isRunningTest()) {
                 Database.executeBatch(new EmailMissionBatch(
                     'COMPLETED_THE_MISSION',
                     new Set<Mission_Assignment__c>(newMissionList)
                 ), Limits.getLimitEmailInvocations()
                 );
-            }
+//            }
 
-            if(!Test.isRunningTest()) {
+//            if(!Test.isRunningTest()) {
                 Database.executeBatch(new EmailMissionBatch(
                     'FAILED_THE_MISSION',
                     new Set<Mission_Assignment__c>(newMissionList)
                 ), Limits.getLimitEmailInvocations()
                 );
-            }
+//            }
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex.getMessage());
         }
