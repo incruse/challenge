@@ -15,7 +15,6 @@ private class AllMissionsControllerTest {
         Test.startTest();
             System.runAs(customerUser) {
                 result = AllMissionsController.getAllMissions(null);
-
             }
         Test.stopTest();
         Assert.isNotNull(result);
@@ -32,10 +31,12 @@ private class AllMissionsControllerTest {
         System.runAs(customerUser) {
             try{
                 result = AllMissionsController.getAllMissions(null);
+                Assert.isNull(result);
             } catch (Exception ex) {
                 Assert.areEqual(ex.getMessage(), System.Label.No_Access_to_the_site);
             }
         }
+        Test.stopTest();
     }
 
     @IsTest
@@ -59,9 +60,29 @@ private class AllMissionsControllerTest {
     }
 
     @IsTest
-    static void getActiveMissionsPositiveTest() {
+    static void acceptMissionNegativeTest() {
+        delete [SELECT Id FROM Mission_Assignment__c];
         User customerUser = [SELECT Id, ContactId FROM User WHERE Profile.UserLicense.Name = 'Customer Community' LIMIT 1];
         Mission_Assignment__c result;
+        Hero__c hero = [SELECT Id, Contact__c FROM Hero__c LIMIT 1];
+        hero.Contact__c = customerUser.ContactId;
+        update hero;
+
+        Test.startTest();
+        try {
+            System.runAs(customerUser) {
+                result = AllMissionsController.acceptMission(null, hero);
+                Assert.isNull(result);
+            }
+        } catch (Exception ex) {
+            Assert.areEqual(ex.getMessage(), 'Attempt to de-reference a null object');
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void getActiveMissionsPositiveTest() {
+        User customerUser = [SELECT Id, ContactId FROM User WHERE Profile.UserLicense.Name = 'Customer Community' LIMIT 1];
         Hero__c hero = [SELECT Id, Contact__c FROM Hero__c LIMIT 1];
         hero.Contact__c = customerUser.ContactId;
         update hero;

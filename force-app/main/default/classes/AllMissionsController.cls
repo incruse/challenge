@@ -4,7 +4,9 @@ public with sharing class AllMissionsController {
         try{
             return new AllMissionsControllerHelper().getAllMissions(offSet);
         } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            AuraHandledException auraException = new AuraHandledException(ex.getMessage());
+            auraException.setMessage(ex.getMessage());
+            throw auraException;
         }
     }
 
@@ -13,7 +15,9 @@ public with sharing class AllMissionsController {
         try{
             return new AllMissionsControllerHelper().acceptMission(mission, hero);
         } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            AuraHandledException auraException = new AuraHandledException(ex.getMessage());
+            auraException.setMessage(ex.getMessage());
+            throw auraException;
         }
     }
 
@@ -22,7 +26,9 @@ public with sharing class AllMissionsController {
         try{
             return new AllMissionsControllerHelper().getActiveMissions();
         } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            AuraHandledException auraException = new AuraHandledException(ex.getMessage());
+            auraException.setMessage(ex.getMessage());
+            throw auraException;
         }
     }
 
@@ -31,7 +37,9 @@ public with sharing class AllMissionsController {
         try{
             return new AllMissionsControllerHelper().updateAssignments(assignment);
         } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            AuraHandledException auraException = new AuraHandledException(ex.getMessage());
+            auraException.setMessage(ex.getMessage());
+            throw auraException;
         }
     }
 
