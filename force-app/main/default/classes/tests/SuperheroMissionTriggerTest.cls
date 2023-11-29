@@ -43,6 +43,4 @@ private class SuperheroMissionTriggerTest {
             Assert.areEqual(job.Status, 'Completed');
         }
     }
-
-
 }

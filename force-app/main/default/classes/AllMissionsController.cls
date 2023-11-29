@@ -113,12 +113,12 @@ public with sharing class AllMissionsController {
 
         private List<Superhero_Mission__c> getSuperheroMissionsSQOL(Integer offSet, String guildId) {
             String query = 'SELECT Id, Complexity_Rank__c, Deadline__c, Is_Public__c, Reward__c, Details__c, Name, Guild__c, Guild__r.Name, Subject__c, ' +
-                    '(SELECT Id, Name, Hero__c, Hero__r.Name, Hero__r.Contact__r.Name, Mission__c, Status__c ' +
-                    'FROM Mission_Assignments__r WHERE Hero__c =: HERO_ID) ' +
-                    'FROM Superhero_Mission__c ' +
-                    'WHERE Is_Public__c = true ' +
-                    'OR Guild__c =: guildId ' +
-                    'ORDER BY CreatedDate DESC ';
+                '(SELECT Id, Name, Hero__c, Hero__r.Name, Hero__r.Contact__r.Name, Mission__c, Status__c ' +
+                'FROM Mission_Assignments__r WHERE Hero__c =: HERO_ID) ' +
+                'FROM Superhero_Mission__c ' +
+                'WHERE Is_Public__c = true ' +
+                'OR Guild__c =: guildId ' +
+                'ORDER BY CreatedDate DESC ';
             query += offSet != null ? 'LIMIT 50 OFFSET :offSet' : 'LIMIT 50';
             return Database.query(query);
         }
@@ -139,8 +139,8 @@ public with sharing class AllMissionsController {
 
         private List<Mission_Assignment__c> getMissionAssignmentSQOL(Integer offSet) {
             String query = 'SELECT Id, Name, Hero__c, Hero__r.Contact__r.OwnerId, Hero__r.Name, Mission__c, Status__c, Mission__r.Name ' +
-                    'FROM Mission_Assignment__c ' +
-                    'WHERE Hero__c =: HERO_ID';
+                'FROM Mission_Assignment__c ' +
+                'WHERE Hero__c =: HERO_ID';
             query += offSet != null ? ' LIMIT 50 OFFSET :offSet' : ' LIMIT 50';
             return Database.query(query);
         }

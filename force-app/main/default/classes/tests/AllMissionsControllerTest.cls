@@ -88,9 +88,9 @@ private class AllMissionsControllerTest {
         update hero;
 
         Integer expectedResult = (Integer) [SELECT COUNT(Id)
-                                    FROM Mission_Assignment__c
-                                    WHERE Hero__c =: hero.Id
-                                    AND Status__c =: 'In Progress'][0].get('expr0');
+                                            FROM Mission_Assignment__c
+                                            WHERE Hero__c =: hero.Id
+                                            AND Status__c =: 'In Progress'][0].get('expr0');
         Integer actualResult;
         Test.startTest();
         System.runAs(customerUser) {
