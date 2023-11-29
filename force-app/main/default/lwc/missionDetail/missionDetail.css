@@ -6,11 +6,7 @@
     --lwc-colorTextIconDefault: black;
 }
 
-.card {
-    border-radius: 1rem;
-    /*height: calc(100vh - 55px);*/
-}
-
 .button {
     background-color: black;
+    justify-content: center;
 }

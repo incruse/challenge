@@ -1,24 +1,11 @@
 ({
     doInit: function(component, event, helper) {
-        var labels = {
-            'ALL_MISSIONS' : $A.get('$Label.c.All_Missions'),
-            'RANK' : $A.get('$Label.c.Rank'),
-            'MISSION' : $A.get('$Label.c.Mission'),
-            'STATUS' : $A.get('$Label.c.Status'),
-            'GUILD' : $A.get('$Label.c.Guild'),
-            'AVAILABLE' : $A.get('$Label.c.Available'),
-            'IN_PROGRESS' : $A.get('$Label.c.In_Progress'),
-            'COMPLETED' : $A.get('$Label.c.Completed'),
-            'FAILED' : $A.get('$Label.c.Failed')
-        };
-        component.set('v.labels', labels);
         helper.getRecords(component);
     },
 
     selectLineHandler: function (component, event, helper) {
-        var selectedMission = component.get('v.missions').find( mission => mission.Id === event.currentTarget.dataset.mission);
         helper.selectLine(component, event, helper);
-        helper.pushSelectedEvent(component, selectedMission);
+        helper.pushSelectedEvent(component, component.get('v.missions').find( mission => mission.Id === event.currentTarget.dataset.mission));
     },
 
     updateMissionHandler: function (component, event, helper) {

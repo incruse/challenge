@@ -1,53 +1,51 @@
 <aura:component description="AllMissions" controller="AllMissionsController" implements="forceCommunity:availableForAllPageTypes">
     <aura:attribute name="missions" type="Object[]"/>
     <aura:attribute name="hero" type="SObject"/>
-    <aura:attribute name="labels" type="Object"/>
     <aura:attribute name="ranks" type="Object[]"/>
     <aura:attribute name="offSet" type="Integer" default="0"/>
     <lightning:messageChannel type="Mission_Details__c" aura:id="missionDetailsChannel" onMessage="{!c.updateMissionHandler}"/>
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-
-    <div class="slds-m-around_small card slds-p-around_medium slds-p-top_large">
-        <div class="slds-grid header slds-p-bottom_small">
-            <span class="slds-text-heading_large">{!v.labels.ALL_MISSIONS}</span>
-            <lightning:icon iconName="utility:topic" size="small" class="slds-p-left_small lightning-icon-black"></lightning:icon>
+    <div>
+    <div class="slds-grid header slds-p-bottom_small">
+        <span class="slds-text-heading_large">{!$Label.c.All_Missions}</span>
+        <lightning:icon iconName="utility:topic" size="small" class="slds-p-left_small lightning-icon-black"></lightning:icon>
+    </div>
+    <div class="tab-header-set slds-grid">
+        <div class="slds-grid slds-size_12-of-12 slds-color__border_gray-1 slds-color__background_gray-4 slds-card slds-p-around_small">
+            <span class="slds-size_1-of-12">{!$Label.c.Rank}</span>
+            <span class="slds-size_7-of-12">{!$Label.c.Mission}</span>
+            <span class="slds-size_2-of-12">{!$Label.c.Guild}</span>
+            <span class="slds-size_2-of-12">{!$Label.c.Status}</span>
         </div>
-        <div class="tab-header-set slds-grid">
-            <div class="slds-grid slds-size_12-of-12 slds-color__border_gray-1 slds-color__background_gray-4 slds-card slds-p-around_small">
-                <span class="slds-size_1-of-12">{!v.labels.RANK}</span>
-                <span class="slds-size_7-of-12">{!v.labels.MISSION}</span>
-                <span class="slds-size_2-of-12">{!v.labels.GUILD}</span>
-                <span class="slds-size_2-of-12">{!v.labels.STATUS}</span>
-            </div>
-            <div class="mission-list slds-size_12-of-12">
-                <aura:iteration items="{!v.missions}" var="mission" indexVar="index">
-                    <div class="slds-grid slds-size_12-of-12 slds-p-around_small mission-line"
-                        onclick="{!c.selectLineHandler}"
-                        data-mission="{!mission.Id}"
-                        data-selected="{!mission.isSelected}"
-                        id="{!mission.Id}">
-                        <div class="slds-size_1-of-12">
-                            <div class="slds-color__background_gray-12 slds-card rank">
-                                <div class="slds-align_absolute-center height-100">
-                                    <span class="slds-text-color_inverse">{!mission.Complexity_Rank__c}</span>
-                                </div>
+        <div class="mission-list slds-size_12-of-12">
+            <aura:iteration items="{!v.missions}" var="mission" indexVar="index">
+                <div class="slds-grid slds-size_12-of-12 slds-p-around_small mission-line"
+                    onclick="{!c.selectLineHandler}"
+                    data-mission="{!mission.Id}"
+                    data-selected="{!mission.isSelected}"
+                    id="{!mission.Id}">
+                    <div class="slds-size_1-of-12">
+                        <div class="slds-color__background_gray-12 slds-card rank">
+                            <div class="slds-align_absolute-center height-100">
+                                <span class="slds-text-color_inverse">{!mission.Complexity_Rank__c}</span>
                             </div>
                         </div>
-                        <div class="slds-align-middle slds-size_7-of-12 slds-p-left_x-small text-2-line">
-                            <span>{!mission.Details__c}</span>
-                        </div>
-                        <div class="slds-align-middle slds-size_2-of-12 slds-p-left_x-small">
-                            <span class="">{!mission.Guild__r.Name}</span>
-                        </div>
-                        <div class="slds-align-middle slds-size_2-of-12 slds-p-left_x-small">
-                            <lightning:badge class="{!(mission.Status == v.labels.IN_PROGRESS ? 'slds-badge' :
-                                mission.Status == v.labels.COMPLETED ? 'slds-badge_inverse' : mission.Status == v.labels.AVAILABLE ? 'slds-badge slds-theme_success' : 'slds-theme_error')}"
-                                label="{!mission.Status}"/>
-                        </div>
                     </div>
-                </aura:iteration>
-            </div>
+                    <div class="slds-align-middle slds-size_7-of-12 slds-p-left_x-small text-2-line">
+                        <span>{!mission.Details__c}</span>
+                    </div>
+                    <div class="slds-align-middle slds-size_2-of-12 slds-p-left_x-small">
+                        <span class="">{!mission.Guild__r.Name}</span>
+                    </div>
+                    <div class="slds-align-middle slds-size_2-of-12 slds-p-left_x-small">
+                        <lightning:badge class="{!(mission.Status == $Label.c.In_Progress ? 'slds-badge' :
+                            mission.Status == $Label.c.Completed ? 'slds-badge_inverse' : mission.Status == $Label.c.Available ? 'slds-badge slds-theme_success' : 'slds-theme_error')}"
+                            label="{!mission.Status}"/>
+                    </div>
+                </div>
+            </aura:iteration>
         </div>
+    </div>
     </div>
 </aura:component>

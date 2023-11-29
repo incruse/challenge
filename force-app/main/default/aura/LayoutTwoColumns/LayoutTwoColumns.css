@@ -1,0 +1,7 @@
+.THIS .full-height {
+    height: calc(100% - 2.5rem);
+}
+
+.THIS .radius {
+    border-radius: 1rem;
+}

@@ -9,12 +9,6 @@
     --lwc-colorTextIconDefault: black;
 }
 
-.THIS.card {
-    background-color: white;
-    border-radius: 20px;
-    height: calc(100vh - 55px);
-}
-
 .THIS .header {
     align-items: center;
 }

@@ -4,7 +4,6 @@
         var action = component.get('c.getAllMissions');
         var offSet = component.get('v.offSet');
         var userId = $A.get("$SObjectType.CurrentUser.Id");
-        var labels = component.get('v.labels');
         action.setParams({
             'offSet' : offSet
         });
@@ -21,15 +20,15 @@
                         el.Mission_Assignments__r.forEach(ma => {
                             if(ma.Hero__c === result.Hero.Id) {
                                 el.Status = ma.Status__c;
-                                inProgress = ma.Status__c === labels.IN_PROGRESS;
-                                completed = ma.Status__c === labels.COMPLETED;
-                                failed = ma.Status__c === labels.FAILED;
+                                inProgress = ma.Status__c === $A.get('$Label.c.In_Progress');
+                                completed = ma.Status__c === $A.get('$Label.c.Completed');
+                                failed = ma.Status__c === $A.get('$Label.c.Failed');
                                 available = false;
                             }
                         })
                     }
                     if(!el.Status) {
-                        el.Status = labels.AVAILABLE;
+                        el.Status = $A.get('$Label.c.Available');
                     }
                     el.isSelected = false;
                 });

@@ -1,10 +1,8 @@
 public with sharing class AllMissionsController {
-    private static final AllMissionsControllerHelper helper = new AllMissionsControllerHelper();
-
     @AuraEnabled(Cacheable=false)
     public static MissionWrapper getAllMissions(Integer offSet) {
         try{
-            return helper.getAllMissions(offSet);
+            return new AllMissionsControllerHelper().getAllMissions(offSet);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -13,7 +11,7 @@ public with sharing class AllMissionsController {
     @AuraEnabled
     public static Mission_Assignment__c acceptMission(Superhero_Mission__c mission, Hero__c hero) {
         try{
-            return helper.acceptMission(mission, hero);
+            return new AllMissionsControllerHelper().acceptMission(mission, hero);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -22,7 +20,7 @@ public with sharing class AllMissionsController {
     @AuraEnabled
     public static Integer getActiveMissions() {
         try{
-            return helper.getActiveMissions();
+            return new AllMissionsControllerHelper().getActiveMissions();
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -31,7 +29,7 @@ public with sharing class AllMissionsController {
     @AuraEnabled
     public static Mission_Assignment__c completeMission(Mission_Assignment__c assignment) {
         try{
-            return helper.updateAssignments(assignment);
+            return new AllMissionsControllerHelper().updateAssignments(assignment);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }

@@ -1,11 +1,11 @@
 import {track, LightningElement, wire} from 'lwc';
 import { subscribe, publish, unsubscribe, MessageContext } from 'lightning/messageService';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
 import MISSION_DETAILS_CHANNEL from '@salesforce/messageChannel/Mission_Details__c';
-import USER_ID from '@salesforce/user/Id';
 import acceptMission from '@salesforce/apex/AllMissionsController.acceptMission';
 import completeMission from '@salesforce/apex/AllMissionsController.completeMission';
 import getActiveMissions from '@salesforce/apex/AllMissionsController.getActiveMissions';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import MISSION_DETAILS_LABEL from '@salesforce/label/c.Mission_Details';
 import ASSASSINS_LABEL from '@salesforce/label/c.Assassins';
@@ -21,6 +21,29 @@ import W_LOW_RANK_MESSAGE from '@salesforce/label/c.Low_Rank_Warning_Message';
 import LIMIT_ACTIVE_MISSION_MESSAGE from '@salesforce/label/c.Limit_Active_Mission_Message';
 
 export default class MissionDetail extends LightningElement {
+    @track mission = {};
+    @track isSelected = false;
+
+    @wire(MessageContext)
+    messageContext;
+
+    get showButton() {
+        return [this.labels.AVAILABLE, this.labels.IN_PROGRESS].includes(this.mission.Status);
+    }
+
+    get buttonLabel() {
+        return this.mission.Status !== this.labels.IN_PROGRESS ? this.labels.ACCEPT : this.labels.COMPLETED;
+    }
+
+    connectedCallback() {
+        this.subscribeToMessageChannel();
+    }
+
+    disconnectedCallback() {
+        unsubscribe(this.subscription);
+        this.subscription = null;
+    }
+
     labels = {
         MISSION_DETAILS : MISSION_DETAILS_LABEL,
         ASSASSINS : ASSASSINS_LABEL,
@@ -36,17 +59,11 @@ export default class MissionDetail extends LightningElement {
         LIMIT_RANK_MSG : LIMIT_ACTIVE_MISSION_MESSAGE
     }
 
-    userId = USER_ID;
+    subscription = null;
     isLoading = true;
     ranksGradation = ['A', 'B', 'C', 'D', 'S'];
     hero;
 
-    get buttonLabel() {
-        return this.mission.Status !== this.labels.IN_PROGRESS ? this.labels.ACCEPT : this.labels.COMPLETED;
-    }
-
-    @track mission = {};
-    @track isSelected = false;
     pushMission(type) {
         const payload = {
             mission : this.mission,
@@ -57,19 +74,7 @@ export default class MissionDetail extends LightningElement {
         publish(this.messageContext, MISSION_DETAILS_CHANNEL, payload);
     }
 
-    get showButton() {
-        return [this.labels.AVAILABLE, this.labels.IN_PROGRESS].includes(this.mission.Status);
-    }
 
-    disconnectedCallback() {
-        unsubscribe(this.subscription);
-        this.subscription = null;
-    }
-
-    subscription = null;
-
-    @wire(MessageContext)
-    messageContext;
     subscribeToMessageChannel() {
         this.subscription = subscribe(
             this.messageContext,
@@ -88,9 +93,7 @@ export default class MissionDetail extends LightningElement {
         this.hero = message.hero;
         this.isSelected = message.mission.isSelected;
     }
-    connectedCallback() {
-        this.subscribeToMessageChannel();
-    }
+
 
     formatCurrency(value) {
         const formatter = new Intl.NumberFormat(navigator.language, {
@@ -144,6 +147,7 @@ export default class MissionDetail extends LightningElement {
                 })
                 .catch(error => {
                     this.showToast('', error.body.message, 'error');
+                    console.error(error);
                 })
                 .finally(() => this.isLoading = false)
         } else {
